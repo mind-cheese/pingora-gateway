@@ -1,1 +1,1 @@
-![pingora-gateway](./doc/logo/pingora-gateway.svg)
+![pingora-gateway](./docs/logo/pingora-gateway.svg)

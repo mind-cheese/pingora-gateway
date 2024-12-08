@@ -1,6 +1,15 @@
-[package]
-name = "pingora-gateway"
+[workspace]
+resolver = "2"
+members = ["manager", "error", "gateway"]
+
+[workspace.package]
 version = "0.1.0"
 edition = "2021"
 
-[dependencies]
+[workspace.dependencies]
+kube = { version = "0.97.0" }
+k8s-openapi = { version = "0.23.0" }
+tokio = { version = "1.14.0" }
+snafu = { version = "0.8.5" }
+gateway-api = { version = "0.14.0" }
+futures = { version = "0.3.17" }
