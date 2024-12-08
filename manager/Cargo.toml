@@ -4,11 +4,17 @@ version = "0.1.0"
 edition = { workspace = true }
 
 [dependencies]
-kube = { workspace = true, features = ["runtime", "derive", "client"] }
-k8s-openapi = { workspace = true, features = ["v1_26"] }
+kube = { workspace = true, default-features = false, features = [
+    "runtime",
+    "derive",
+    "client",
+] }
+k8s-openapi = { workspace = true, features = ["v1_31", "schemars"] }
 tokio = { workspace = true, features = ["full"] }
 snafu = { workspace = true }
 gateway-api = { workspace = true }
 futures = { workspace = true }
 error = { path = "../error" }
 async-trait = { version = "0.1.83" }
+lazy_static = "1.5.0"
+tracing = "0.1.37"
