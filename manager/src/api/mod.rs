@@ -14,5 +14,5 @@ pub struct Context {
 
 #[async_trait]
 pub trait Runner {
-    async fn run(&self) -> Result<()>;
+    async fn run(self) -> Result<()>;
 }

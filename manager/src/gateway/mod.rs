@@ -13,16 +13,16 @@ use std::{sync::Arc, time::Duration};
 use tracing::*;
 
 pub struct Controller {
-    ctx: Arc<Context>,
+    ctx: Context,
     inner: runtime::Controller<Gateway>,
 }
 
 #[async_trait]
 impl Runner for Controller {
-    async fn run(&self) -> Result<()> {
+    async fn run(self) -> Result<()> {
         self.inner
             .shutdown_on_signal()
-            .run(reconcile, error_policy, self.ctx.clone())
+            .run(reconcile, error_policy, self.ctx.into())
             .for_each(|res| async move {
                 match res {
                     Ok(o) => info!("reconciled {:?}", o),
@@ -35,23 +35,17 @@ impl Runner for Controller {
 }
 
 impl Controller {
-    fn new(ctx: Context) -> Self {
+    pub fn new(ctx: Context) -> Self {
         let gateway: Api<Gateway> = Api::all(ctx.client.clone());
         let deploy: Api<Deployment> = Api::all(ctx.client.clone());
-        let managed_label = MANAGERED_BY_CHEESEFORCE_GATEWAY_LABEL.clone();
-        let maganed_deploy_selector = Selector::from_iter(managed_label);
-
+        let maganed_deploy_selector =
+            Selector::from_iter(MANAGERED_BY_CHEESEFORCE_GATEWAY_LABEL.clone());
+        let watch_config = Config::default().timeout(5 * 60);
         Self {
-            ctx: Arc::new(ctx),
-            inner: runtime::Controller::new(
-                gateway,
-                Config::default().timeout(5 * 60).any_semantic(),
-            )
-            .owns(
+            ctx: ctx.clone(),
+            inner: runtime::Controller::new(gateway, watch_config.clone().any_semantic()).owns(
                 deploy,
-                Config::default()
-                    .timeout(5 * 60)
-                    .labels_from(&maganed_deploy_selector),
+                watch_config.clone().labels_from(&maganed_deploy_selector),
             ),
         }
     }
