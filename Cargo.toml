@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["manager", "error", "gateway"]
+members = ["manager", "error", "gateway", "api"]
 
 [workspace.package]
 version = "0.1.0"

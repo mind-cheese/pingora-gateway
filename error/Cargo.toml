@@ -6,3 +6,6 @@ edition = { workspace = true }
 [dependencies]
 snafu = { workspace = true }
 kube = { workspace = true }
+serde = { version = "1.0.130", features = ["derive"] }
+serde_json = "1.0.68"
+serde_yaml = "0.9.19"
